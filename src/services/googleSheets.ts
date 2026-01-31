@@ -33,9 +33,10 @@ export async function fetchShips(): Promise<Ship[]> {
           booking_method: row[8] || '',
           calander_id: row[9] || '',
           calander_url: row[10] || '',
-          recommendation: row[11] || '',
-          trip_count: row[12] || '',
-          memo: row[13] || '',
+          calender_status: row[11] || '',
+          review: row[12] || '',
+          visit_count: row[13] || '',
+          memo: row[14] || '',
         }));
 
         resolve(ships);

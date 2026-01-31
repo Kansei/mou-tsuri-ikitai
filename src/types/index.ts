@@ -14,8 +14,9 @@ export interface Ship {
   booking_method: string;
   calander_id: string;
   calander_url: string;
-  recommendation: string;
-  trip_count: string;
+  calender_status: string;
+  review: string;
+  visit_count: string;
   memo: string;
 }
 

@@ -47,10 +47,10 @@ export function ShipCard({ ship }: ShipCardProps) {
           </div>
         )}
 
-        {ship.recommendation && (
+        {ship.review && (
           <div className="ship-info-row">
             <span className="ship-info-label">推奨度</span>
-            <span className="ship-info-value">{ship.recommendation}</span>
+            <span className="ship-info-value">{ship.review}</span>
           </div>
         )}
 
