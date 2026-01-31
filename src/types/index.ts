@@ -25,7 +25,8 @@ export interface Booking {
 }
 
 export interface FilterOptions {
-  date: string;
+  dateFrom: string;
+  dateTo: string;
   category: string;
   showOnlyAvailable: boolean;
   shipname: string;

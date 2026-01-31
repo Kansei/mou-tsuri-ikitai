@@ -10,7 +10,7 @@ function App() {
         <header className="header">
           <div className="header-content">
             <h1 className="site-title">
-              <NavLink to="/">もう釣りいきたい</NavLink>
+              <NavLink to="/">もうツリイキタイ</NavLink>
             </h1>
             <nav className="nav">
               <NavLink to="/" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'} end>
@@ -31,7 +31,7 @@ function App() {
         </main>
 
         <footer className="footer">
-          <p>もう釣りいきたい - 遊漁船検索サービス</p>
+          <p>もうツリイキタイ - 遊漁船検索サービス</p>
         </footer>
       </div>
     </HashRouter>

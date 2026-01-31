@@ -30,30 +30,34 @@ export function BookingCard({ booking, ship }: BookingCardProps) {
 
   return (
     <div
-      className={`booking-card ${ship?.url ? 'clickable' : ''}`}
+      className={`booking-card ${statusColors[booking.status]} ${ship?.url ? 'clickable' : ''}`}
       onClick={handleClick}
     >
-      <div className="booking-header">
-        <span className="booking-date">{formatDateForDisplay(booking.datedtime)}</span>
-        <span className={`booking-status ${statusColors[booking.status]}`}>
-          {statusLabels[booking.status]}
-        </span>
-      </div>
+      <div className="booking-main">
+        <div className="booking-date-large">{formatDateForDisplay(booking.datedtime)}</div>
 
-      <h3 className="booking-shipname">{booking.shipname}</h3>
+        <div className="booking-info">
+          <div className="booking-shipname">{booking.shipname}</div>
+          {ship?.departure_port && (
+            <div className="booking-port">{ship.departure_port}</div>
+          )}
+        </div>
+      </div>
 
       <div className="booking-details">
         {booking.category && (
           <span className="booking-category">{booking.category}</span>
         )}
+      </div>
+
+      <div className="booking-footer">
+        <span className={`booking-status ${statusColors[booking.status]}`}>
+          {statusLabels[booking.status]}
+        </span>
         {booking.status === 'open' && booking.capacityCount > 0 && (
           <span className="booking-capacity">残り{booking.capacityCount}名</span>
         )}
       </div>
-
-      {ship?.departure_port && (
-        <div className="booking-port">{ship.departure_port}</div>
-      )}
     </div>
   );
 }

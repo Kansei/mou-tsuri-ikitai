@@ -8,30 +8,56 @@ import './HomePage.css';
 
 const CATEGORIES = ['ジギング', 'SLJ', 'キャスティング', 'タイラバ', 'その他'];
 
+function getDefaultDateFrom(): string {
+  const today = new Date();
+  return today.toISOString().split('T')[0];
+}
+
+function getDefaultDateTo(): string {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 2);
+  return date.toISOString().split('T')[0];
+}
+
 export function HomePage() {
   const { ships, bookings, loading, error } = useData();
   const [filters, setFilters] = useState<FilterOptions>({
-    date: '',
+    dateFrom: getDefaultDateFrom(),
+    dateTo: getDefaultDateTo(),
     category: '',
     showOnlyAvailable: false,
     shipname: '',
   });
 
   const filteredBookings = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     return bookings
       .filter((booking) => {
-        // 日付フィルタ
-        if (filters.date) {
-          const bookingDate = parseDate(booking.datedtime);
-          const filterDate = new Date(filters.date);
-          if (bookingDate && filterDate) {
-            if (
-              bookingDate.getFullYear() !== filterDate.getFullYear() ||
-              bookingDate.getMonth() !== filterDate.getMonth() ||
-              bookingDate.getDate() !== filterDate.getDate()
-            ) {
-              return false;
-            }
+        const bookingDate = parseDate(booking.datedtime);
+        if (!bookingDate) return false;
+
+        // 今日以前のプランは除外
+        if (bookingDate < today) {
+          return false;
+        }
+
+        // 開始日フィルタ
+        if (filters.dateFrom) {
+          const fromDate = new Date(filters.dateFrom);
+          fromDate.setHours(0, 0, 0, 0);
+          if (bookingDate < fromDate) {
+            return false;
+          }
+        }
+
+        // 終了日フィルタ
+        if (filters.dateTo) {
+          const toDate = new Date(filters.dateTo);
+          toDate.setHours(23, 59, 59, 999);
+          if (bookingDate > toDate) {
+            return false;
           }
         }
 
