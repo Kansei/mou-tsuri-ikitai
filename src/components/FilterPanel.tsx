@@ -54,24 +54,6 @@ export function FilterPanel({ filters, onFilterChange, ships, categories }: Filt
       </div>
 
       <div className="filter-row">
-        <div className="filter-group status-filter-group">
-          <label className="filter-label">ステータス</label>
-          <div className="status-buttons">
-            {STATUS_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={`status-button ${option.value} ${filters.statusFilter.includes(option.value) ? 'active' : ''}`}
-                onClick={() => handleStatusToggle(option.value)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="filter-row">
         <div className="filter-group">
           <label className="filter-label">釣り方</label>
           <select
@@ -102,6 +84,24 @@ export function FilterPanel({ filters, onFilterChange, ships, categories }: Filt
               </option>
             ))}
           </select>
+        </div>
+      </div>
+
+      <div className="filter-row">
+        <div className="filter-group status-filter-group">
+          <label className="filter-label">ステータス</label>
+          <div className="status-buttons">
+            {STATUS_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={`status-button ${option.value} ${filters.statusFilter.includes(option.value) ? 'active' : ''}`}
+                onClick={() => handleStatusToggle(option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

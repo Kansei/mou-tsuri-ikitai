@@ -122,7 +122,15 @@ export function HomePage() {
       });
   }, [bookings, filters, ships]);
 
-  // 日別にグループ化
+  // ステータスの並び順
+  const STATUS_ORDER: Record<string, number> = {
+    open: 0,
+    full: 1,
+    close: 2,
+    undefined: 3,
+  };
+
+  // 日別にグループ化し、グループ内をソート
   const groupedBookings = useMemo((): GroupedBookings[] => {
     const groups: Map<string, Booking[]> = new Map();
 
@@ -137,18 +145,36 @@ export function HomePage() {
       groups.get(dateKey)!.push(booking);
     });
 
-    return Array.from(groups.entries()).map(([dateKey, bookings]) => {
+    return Array.from(groups.entries()).map(([dateKey, dateBookings]) => {
       const date = parseDate(dateKey);
       const isWeekend = date ? (date.getDay() === 0 || date.getDay() === 6) : false;
+
+      // グループ内をステータス → 釣り方 → 港の順でソート
+      const sortedBookings = [...dateBookings].sort((a, b) => {
+        // 1. ステータス順
+        const statusDiff = STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
+        if (statusDiff !== 0) return statusDiff;
+
+        // 2. 釣り方順
+        const categoryDiff = (a.category || '').localeCompare(b.category || '');
+        if (categoryDiff !== 0) return categoryDiff;
+
+        // 3. 港順
+        const shipA = getShipByName(a.shipname);
+        const shipB = getShipByName(b.shipname);
+        const portA = shipA?.departure_port || '';
+        const portB = shipB?.departure_port || '';
+        return portA.localeCompare(portB);
+      });
 
       return {
         date: formatDateHeader(dateKey),
         dateKey,
-        bookings,
+        bookings: sortedBookings,
         isWeekend,
       };
     });
-  }, [filteredBookings]);
+  }, [filteredBookings, ships]);
 
   if (loading) {
     return (
