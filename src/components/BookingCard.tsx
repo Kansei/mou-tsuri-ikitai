@@ -51,6 +51,10 @@ export function BookingCard({ booking, ship }: BookingCardProps) {
       {booking.status === 'open' && booking.capacityCount > 0 && (
         <div className="booking-capacity">残り{booking.capacityCount}名</div>
       )}
+
+      {booking.calendarTitle && (
+        <div className="booking-calendar-title">{booking.calendarTitle}</div>
+      )}
     </div>
   );
 }

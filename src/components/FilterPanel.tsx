@@ -30,13 +30,6 @@ export function FilterPanel({ filters, onFilterChange, ships, categories }: Filt
   // 港リストを取得（重複排除）
   const ports = [...new Set(ships.map((s) => s.departure_port).filter(Boolean))].sort();
 
-  // 地域リストを取得（addressから都道府県を抽出）
-  const areas = [...new Set(ships.map((s) => {
-    // 住所から都道府県を抽出（例：「福岡県福岡市...」→「福岡県」）
-    const match = s.address.match(/^(.+?[都道府県])/);
-    return match ? match[1] : s.address.split(/[市区町村]/)[0];
-  }).filter(Boolean))].sort();
-
   return (
     <div className="filter-panel">
       <div className="filter-row">
@@ -61,17 +54,35 @@ export function FilterPanel({ filters, onFilterChange, ships, categories }: Filt
       </div>
 
       <div className="filter-row">
+        <div className="filter-group status-filter-group">
+          <label className="filter-label">ステータス</label>
+          <div className="status-buttons">
+            {STATUS_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={`status-button ${option.value} ${filters.statusFilter.includes(option.value) ? 'active' : ''}`}
+                onClick={() => handleStatusToggle(option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="filter-row">
         <div className="filter-group">
-          <label className="filter-label">地域</label>
+          <label className="filter-label">釣り方</label>
           <select
             className="filter-select"
-            value={filters.area}
-            onChange={(e) => handleChange('area', e.target.value)}
+            value={filters.category}
+            onChange={(e) => handleChange('category', e.target.value)}
           >
             <option value="">すべて</option>
-            {areas.map((area) => (
-              <option key={area} value={area}>
-                {area}
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
               </option>
             ))}
           </select>
@@ -91,40 +102,6 @@ export function FilterPanel({ filters, onFilterChange, ships, categories }: Filt
               </option>
             ))}
           </select>
-        </div>
-
-        <div className="filter-group">
-          <label className="filter-label">釣り方</label>
-          <select
-            className="filter-select"
-            value={filters.category}
-            onChange={(e) => handleChange('category', e.target.value)}
-          >
-            <option value="">すべて</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="filter-row">
-        <div className="filter-group status-filter-group">
-          <label className="filter-label">ステータス</label>
-          <div className="status-buttons">
-            {STATUS_OPTIONS.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={`status-button ${option.value} ${filters.statusFilter.includes(option.value) ? 'active' : ''}`}
-                onClick={() => handleStatusToggle(option.value)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
     </div>
