@@ -20,12 +20,25 @@ const statusColors: Record<string, string> = {
   undefined: 'status-undefined',
 };
 
+// 住所から都道府県・市区町村を抽出
+function extractLocation(address: string): string {
+  if (!address) return '';
+  // 例: 「福岡県福岡市西区...」→「福岡県福岡市西区」
+  const match = address.match(/^(.+?[都道府県])(.+?[市区町村])?/);
+  if (match) {
+    return match[1] + (match[2] || '');
+  }
+  return '';
+}
+
 export function BookingCard({ booking, ship }: BookingCardProps) {
   const handleClick = () => {
     if (ship?.url) {
       window.open(ship.url, '_blank', 'noopener,noreferrer');
     }
   };
+
+  const location = ship ? extractLocation(ship.address) : '';
 
   return (
     <div
@@ -40,6 +53,9 @@ export function BookingCard({ booking, ship }: BookingCardProps) {
       </div>
 
       <div className="booking-meta">
+        {location && (
+          <span className="booking-location">{location}</span>
+        )}
         {ship?.departure_port && (
           <span className="booking-port">{ship.departure_port}</span>
         )}
