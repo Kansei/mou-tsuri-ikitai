@@ -5,12 +5,25 @@ interface ShipCardProps {
   ship: Ship;
 }
 
+// 住所から都道府県・市区町村を抽出
+function extractLocation(address: string): string {
+  if (!address) return '';
+  const match = address.match(/^(.+?[都道府県])(.+?[市区町村])?/);
+  if (match) {
+    return match[1] + (match[2] || '');
+  }
+  return '';
+}
+
 export function ShipCard({ ship }: ShipCardProps) {
   const handleClick = () => {
     if (ship.url) {
       window.open(ship.url, '_blank', 'noopener,noreferrer');
     }
   };
+
+  const location = extractLocation(ship.address);
+  const departureLocation = [location, ship.departure_port].filter(Boolean).join(' ');
 
   return (
     <div
@@ -20,10 +33,10 @@ export function ShipCard({ ship }: ShipCardProps) {
       <h3 className="ship-name">{ship.shipname}</h3>
 
       <div className="ship-info">
-        {ship.departure_port && (
+        {departureLocation && (
           <div className="ship-info-row">
             <span className="ship-info-label">出港地</span>
-            <span className="ship-info-value">{ship.departure_port}</span>
+            <span className="ship-info-value">{departureLocation}</span>
           </div>
         )}
 
@@ -34,17 +47,17 @@ export function ShipCard({ ship }: ShipCardProps) {
           </div>
         )}
 
-        {ship.payment_method && (
+        {ship.recommendation && (
           <div className="ship-info-row">
-            <span className="ship-info-label">支払</span>
-            <span className="ship-info-value">{ship.payment_method}</span>
+            <span className="ship-info-label">推奨度</span>
+            <span className="ship-info-value">{ship.recommendation}</span>
           </div>
         )}
 
-        {ship.booking_method && (
+        {ship.memo && (
           <div className="ship-info-row">
-            <span className="ship-info-label">予約</span>
-            <span className="ship-info-value">{ship.booking_method}</span>
+            <span className="ship-info-label">メモ</span>
+            <span className="ship-info-value ship-memo">{ship.memo}</span>
           </div>
         )}
       </div>

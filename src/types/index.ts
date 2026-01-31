@@ -13,6 +13,10 @@ export interface Ship {
   payment_method: string;
   booking_method: string;
   calander_id: string;
+  calander_url: string;
+  recommendation: string;
+  trip_count: string;
+  memo: string;
 }
 
 export interface Booking {
