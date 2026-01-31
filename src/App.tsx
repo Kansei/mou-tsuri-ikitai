@@ -1,11 +1,11 @@
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { HashRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { ShipsPage } from './pages/ShipsPage';
 import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="app">
         <header className="header">
           <div className="header-content">
@@ -34,7 +34,7 @@ function App() {
           <p>もう釣りいきたい - 遊漁船検索サービス</p>
         </footer>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
