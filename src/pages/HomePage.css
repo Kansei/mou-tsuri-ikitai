@@ -16,10 +16,50 @@
   font-size: 18px;
 }
 
+/* 日別グループ */
+.date-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.date-group {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.date-header {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-header.weekend {
+  color: #1976d2;
+  border-bottom-color: #1976d2;
+}
+
+.booking-count {
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  background: #f5f5f5;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
 .booking-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
 }
 
 .loading {
@@ -61,6 +101,10 @@
 }
 
 @media (max-width: 640px) {
+  .date-group {
+    padding: 16px;
+  }
+
   .booking-grid {
     grid-template-columns: 1fr;
   }

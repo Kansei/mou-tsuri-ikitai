@@ -1,5 +1,4 @@
 import type { Booking, Ship } from '../types';
-import { formatDateForDisplay } from '../services/googleSheets';
 import './BookingCard.css';
 
 interface BookingCardProps {
@@ -33,31 +32,25 @@ export function BookingCard({ booking, ship }: BookingCardProps) {
       className={`booking-card ${statusColors[booking.status]} ${ship?.url ? 'clickable' : ''}`}
       onClick={handleClick}
     >
-      <div className="booking-main">
-        <div className="booking-date-large">{formatDateForDisplay(booking.datedtime)}</div>
-
-        <div className="booking-info">
-          <div className="booking-shipname">{booking.shipname}</div>
-          {ship?.departure_port && (
-            <div className="booking-port">{ship.departure_port}</div>
-          )}
-        </div>
+      <div className="booking-header">
+        <div className="booking-shipname">{booking.shipname}</div>
+        <span className={`booking-status ${statusColors[booking.status]}`}>
+          {statusLabels[booking.status]}
+        </span>
       </div>
 
-      <div className="booking-details">
+      <div className="booking-meta">
+        {ship?.departure_port && (
+          <span className="booking-port">{ship.departure_port}</span>
+        )}
         {booking.category && (
           <span className="booking-category">{booking.category}</span>
         )}
       </div>
 
-      <div className="booking-footer">
-        <span className={`booking-status ${statusColors[booking.status]}`}>
-          {statusLabels[booking.status]}
-        </span>
-        {booking.status === 'open' && booking.capacityCount > 0 && (
-          <span className="booking-capacity">残り{booking.capacityCount}名</span>
-        )}
-      </div>
+      {booking.status === 'open' && booking.capacityCount > 0 && (
+        <div className="booking-capacity">残り{booking.capacityCount}名</div>
+      )}
     </div>
   );
 }

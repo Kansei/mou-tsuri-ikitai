@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react';
 import { useData } from '../hooks/useData';
 import { BookingCard } from '../components/BookingCard';
 import { FilterPanel } from '../components/FilterPanel';
-import { parseDate } from '../services/googleSheets';
-import type { FilterOptions } from '../types';
+import { parseDate, formatDate } from '../services/googleSheets';
+import type { FilterOptions, Booking, Ship } from '../types';
 import './HomePage.css';
 
 const CATEGORIES = ['ジギング', 'SLJ', 'キャスティング', 'タイラバ', 'その他'];
@@ -19,16 +19,41 @@ function getDefaultDateTo(): string {
   return date.toISOString().split('T')[0];
 }
 
+function formatDateHeader(dateStr: string): string {
+  const date = parseDate(dateStr);
+  if (!date) return dateStr;
+
+  const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const weekday = weekdays[date.getDay()];
+
+  return `${month}月${day}日（${weekday}）`;
+}
+
+interface GroupedBookings {
+  date: string;
+  dateKey: string;
+  bookings: Booking[];
+  isWeekend: boolean;
+}
+
 export function HomePage() {
   const { ships, bookings, loading, error } = useData();
   const [filters, setFilters] = useState<FilterOptions>({
     dateFrom: getDefaultDateFrom(),
     dateTo: getDefaultDateTo(),
     category: '',
-    showOnlyAvailable: false,
-    shipname: '',
+    port: '',
+    area: '',
+    statusFilter: ['open', 'full'], // デフォルトで空きありと満船を表示
   });
 
+  // 船名から船情報を取得
+  const getShipByName = (name: string): Ship | undefined =>
+    ships.find((s) => s.shipname === name);
+
+  // フィルタリングされたブッキング
   const filteredBookings = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -66,13 +91,24 @@ export function HomePage() {
           return false;
         }
 
-        // 遊漁船フィルタ
-        if (filters.shipname && booking.shipname !== filters.shipname) {
-          return false;
+        // 港フィルタ
+        if (filters.port) {
+          const ship = getShipByName(booking.shipname);
+          if (!ship || ship.departure_port !== filters.port) {
+            return false;
+          }
         }
 
-        // 空きありのみ
-        if (filters.showOnlyAvailable && booking.status !== 'open') {
+        // 地域フィルタ
+        if (filters.area) {
+          const ship = getShipByName(booking.shipname);
+          if (!ship || !ship.address.includes(filters.area)) {
+            return false;
+          }
+        }
+
+        // ステータスフィルタ
+        if (filters.statusFilter.length > 0 && !filters.statusFilter.includes(booking.status)) {
           return false;
         }
 
@@ -84,9 +120,35 @@ export function HomePage() {
         if (!dateA || !dateB) return 0;
         return dateA.getTime() - dateB.getTime();
       });
-  }, [bookings, filters]);
+  }, [bookings, filters, ships]);
 
-  const getShipByName = (name: string) => ships.find((s) => s.shipname === name);
+  // 日別にグループ化
+  const groupedBookings = useMemo((): GroupedBookings[] => {
+    const groups: Map<string, Booking[]> = new Map();
+
+    filteredBookings.forEach((booking) => {
+      const date = parseDate(booking.datedtime);
+      if (!date) return;
+
+      const dateKey = formatDate(date);
+      if (!groups.has(dateKey)) {
+        groups.set(dateKey, []);
+      }
+      groups.get(dateKey)!.push(booking);
+    });
+
+    return Array.from(groups.entries()).map(([dateKey, bookings]) => {
+      const date = parseDate(dateKey);
+      const isWeekend = date ? (date.getDay() === 0 || date.getDay() === 6) : false;
+
+      return {
+        date: formatDateHeader(dateKey),
+        dateKey,
+        bookings,
+        isWeekend,
+      };
+    });
+  }, [filteredBookings]);
 
   if (loading) {
     return (
@@ -125,13 +187,23 @@ export function HomePage() {
           <p>条件に一致するプランがありません</p>
         </div>
       ) : (
-        <div className="booking-grid">
-          {filteredBookings.map((booking, index) => (
-            <BookingCard
-              key={`${booking.shipname}-${booking.datedtime}-${index}`}
-              booking={booking}
-              ship={getShipByName(booking.shipname)}
-            />
+        <div className="date-groups">
+          {groupedBookings.map((group) => (
+            <div key={group.dateKey} className="date-group">
+              <h2 className={`date-header ${group.isWeekend ? 'weekend' : ''}`}>
+                {group.date}
+                <span className="booking-count">{group.bookings.length}件</span>
+              </h2>
+              <div className="booking-grid">
+                {group.bookings.map((booking, index) => (
+                  <BookingCard
+                    key={`${booking.shipname}-${booking.datedtime}-${index}`}
+                    booking={booking}
+                    ship={getShipByName(booking.shipname)}
+                  />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}

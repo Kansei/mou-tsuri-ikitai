@@ -28,6 +28,7 @@ export interface FilterOptions {
   dateFrom: string;
   dateTo: string;
   category: string;
-  showOnlyAvailable: boolean;
-  shipname: string;
+  port: string;
+  area: string;
+  statusFilter: BookingStatus[];
 }
