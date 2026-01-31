@@ -27,6 +27,12 @@ export function FilterPanel({ filters, onFilterChange, ships, categories }: Filt
     onFilterChange({ ...filters, statusFilter: newStatusFilter });
   };
 
+  // 地域リストを取得（addressから都道府県を抽出）
+  const areas = [...new Set(ships.map((s) => {
+    const match = s.address.match(/^(.+?[都道府県])/);
+    return match ? match[1] : s.address.split(/[市区町村]/)[0];
+  }).filter(Boolean))].sort();
+
   // 港リストを取得（重複排除）
   const ports = [...new Set(ships.map((s) => s.departure_port).filter(Boolean))].sort();
 
@@ -65,6 +71,22 @@ export function FilterPanel({ filters, onFilterChange, ships, categories }: Filt
             {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label className="filter-label">地域</label>
+          <select
+            className="filter-select"
+            value={filters.area}
+            onChange={(e) => handleChange('area', e.target.value)}
+          >
+            <option value="">すべて</option>
+            {areas.map((area) => (
+              <option key={area} value={area}>
+                {area}
               </option>
             ))}
           </select>
