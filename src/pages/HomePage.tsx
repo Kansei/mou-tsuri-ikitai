@@ -130,6 +130,12 @@ export function HomePage() {
     undefined: 3,
   };
 
+  // カテゴリーの並び順（その他は最後）
+  const getCategoryOrder = (category: string): number => {
+    if (category === 'その他' || category === '') return 999;
+    return 0;
+  };
+
   // 日別にグループ化し、グループ内をソート
   const groupedBookings = useMemo((): GroupedBookings[] => {
     const groups: Map<string, Booking[]> = new Map();
@@ -155,7 +161,10 @@ export function HomePage() {
         const statusDiff = STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
         if (statusDiff !== 0) return statusDiff;
 
-        // 2. 釣り方順
+        // 2. 釣り方順（その他は最後）
+        const categoryOrderA = getCategoryOrder(a.category);
+        const categoryOrderB = getCategoryOrder(b.category);
+        if (categoryOrderA !== categoryOrderB) return categoryOrderA - categoryOrderB;
         const categoryDiff = (a.category || '').localeCompare(b.category || '');
         if (categoryDiff !== 0) return categoryDiff;
 
