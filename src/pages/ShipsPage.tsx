@@ -30,29 +30,52 @@ export function ShipsPage() {
     return [...new Set(ships.map((s) => s.departure_port).filter(Boolean))].sort();
   }, [ships]);
 
-  // フィルタリングされた船
+  // 住所から都道府県を抽出
+  const extractArea = (address: string): string => {
+    const match = address.match(/^(.+?[都道府県])/);
+    return match ? match[1] : address.split(/[市区町村]/)[0] || '';
+  };
+
+  // フィルタリング・ソートされた船
   const filteredShips = useMemo(() => {
-    return ships.filter((ship) => {
-      // 地域フィルタ
-      if (filters.area && !ship.address.includes(filters.area)) {
-        return false;
-      }
+    return ships
+      .filter((ship) => {
+        // 地域フィルタ
+        if (filters.area && !ship.address.includes(filters.area)) {
+          return false;
+        }
 
-      // 港フィルタ
-      if (filters.port && ship.departure_port !== filters.port) {
-        return false;
-      }
+        // 港フィルタ
+        if (filters.port && ship.departure_port !== filters.port) {
+          return false;
+        }
 
-      // カレンダー取得状況フィルタ
-      if (filters.calendarStatus === 'active' && ship.calender_status !== 'active') {
-        return false;
-      }
-      if (filters.calendarStatus === 'inactive' && ship.calender_status === 'active') {
-        return false;
-      }
+        // カレンダー取得状況フィルタ
+        if (filters.calendarStatus === 'active' && ship.calender_status !== 'active') {
+          return false;
+        }
+        if (filters.calendarStatus === 'inactive' && ship.calender_status === 'active') {
+          return false;
+        }
 
-      return true;
-    });
+        return true;
+      })
+      .sort((a, b) => {
+        // 1. 地域順
+        const areaA = extractArea(a.address);
+        const areaB = extractArea(b.address);
+        const areaDiff = areaA.localeCompare(areaB);
+        if (areaDiff !== 0) return areaDiff;
+
+        // 2. 港順
+        const portDiff = (a.departure_port || '').localeCompare(b.departure_port || '');
+        if (portDiff !== 0) return portDiff;
+
+        // 3. カレンダー連携順（連携中が先）
+        const calA = a.calender_status === 'active' ? 0 : 1;
+        const calB = b.calender_status === 'active' ? 0 : 1;
+        return calA - calB;
+      });
   }, [ships, filters]);
 
   const handleChange = (key: keyof ShipFilters, value: string) => {
@@ -115,15 +138,15 @@ export function ShipsPage() {
           </div>
 
           <div className="ships-filter-group">
-            <label className="ships-filter-label">プラン取得</label>
+            <label className="ships-filter-label">カレンダー連携</label>
             <select
               className="ships-filter-select"
               value={filters.calendarStatus}
               onChange={(e) => handleChange('calendarStatus', e.target.value)}
             >
               <option value="">すべて</option>
-              <option value="active">取得中</option>
-              <option value="inactive">未取得</option>
+              <option value="active">連携中</option>
+              <option value="inactive">未連携</option>
             </select>
           </div>
         </div>

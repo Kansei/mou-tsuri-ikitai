@@ -35,7 +35,7 @@ export function ShipCard({ ship }: ShipCardProps) {
       <div className="ship-header">
         <h3 className="ship-name">{ship.shipname}</h3>
         <span className={`ship-calendar-badge ${isCalendarActive ? 'active' : 'inactive'}`}>
-          {isCalendarActive ? 'プラン取得中' : '未取得'}
+          {isCalendarActive ? '連携中' : '未連携'}
         </span>
       </div>
 
