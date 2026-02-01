@@ -52,7 +52,7 @@
 .filter-input:focus,
 .filter-select:focus {
   outline: none;
-  border-color: #1976d2;
+  border-color: #0288d1;
 }
 
 .filter-select {
