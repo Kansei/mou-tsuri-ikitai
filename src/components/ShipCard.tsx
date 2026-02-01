@@ -25,12 +25,19 @@ export function ShipCard({ ship }: ShipCardProps) {
   const location = extractLocation(ship.address);
   const departureLocation = [location, ship.departure_port].filter(Boolean).join(' ');
 
+  const isCalendarActive = ship.calender_status === 'active';
+
   return (
     <div
       className={`ship-card ${ship.url ? 'clickable' : ''}`}
       onClick={handleClick}
     >
-      <h3 className="ship-name">{ship.shipname}</h3>
+      <div className="ship-header">
+        <h3 className="ship-name">{ship.shipname}</h3>
+        <span className={`ship-calendar-badge ${isCalendarActive ? 'active' : 'inactive'}`}>
+          {isCalendarActive ? 'プラン取得中' : '未取得'}
+        </span>
+      </div>
 
       <div className="ship-info">
         {departureLocation && (
