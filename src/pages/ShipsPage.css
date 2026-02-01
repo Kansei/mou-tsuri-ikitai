@@ -1,0 +1,79 @@
+.ships-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.ships-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #1a1a1a;
+}
+
+/* フィルターパネル */
+.ships-filter-panel {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ships-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ships-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+}
+
+.ships-filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+}
+
+.ships-filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.ships-filter-select:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.ships-count {
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.ships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 640px) {
+  .ships-filter-row {
+    flex-direction: column;
+  }
+
+  .ships-filter-group {
+    width: 100%;
+  }
+
+  .ships-grid {
+    grid-template-columns: 1fr;
+  }
+}

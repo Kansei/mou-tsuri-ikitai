@@ -1,0 +1,159 @@
+.filter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-separator {
+  color: #888;
+  font-size: 14px;
+}
+
+.filter-input,
+.filter-select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.filter-select {
+  min-width: 120px;
+}
+
+/* ステータスフィルタ */
+.status-filter-group {
+  flex: 1;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-button {
+  padding: 8px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.status-button:hover {
+  border-color: #bbb;
+}
+
+.status-button.open {
+  border-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.status-button.open.active {
+  background: #e8f5e9;
+  border-color: #4caf50;
+  color: #2e7d32;
+}
+
+.status-button.full {
+  border-color: #ffe0b2;
+  color: #e65100;
+}
+
+.status-button.full.active {
+  background: #fff3e0;
+  border-color: #ff9800;
+  color: #e65100;
+}
+
+.status-button.close {
+  border-color: #e0e0e0;
+  color: #9e9e9e;
+}
+
+.status-button.close.active {
+  background: #f5f5f5;
+  border-color: #9e9e9e;
+  color: #616161;
+}
+
+.status-button.undefined {
+  border-color: #e0e0e0;
+  color: #757575;
+}
+
+.status-button.undefined.active {
+  background: #fafafa;
+  border-color: #757575;
+  color: #424242;
+}
+
+@media (max-width: 768px) {
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .date-range {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-separator {
+    text-align: center;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+
+  .status-buttons {
+    justify-content: flex-start;
+  }
+}
