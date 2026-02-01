@@ -36,6 +36,7 @@ interface GroupedBookings {
   dateKey: string;
   bookings: Booking[];
   isWeekend: boolean;
+  isSunday: boolean;
 }
 
 export function HomePage() {
@@ -153,7 +154,9 @@ export function HomePage() {
 
     return Array.from(groups.entries()).map(([dateKey, dateBookings]) => {
       const date = parseDate(dateKey);
-      const isWeekend = date ? (date.getDay() === 0 || date.getDay() === 6) : false;
+      const dayOfWeek = date ? date.getDay() : -1;
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const isSunday = dayOfWeek === 0;
 
       // グループ内をステータス → 釣り方 → 港の順でソート
       const sortedBookings = [...dateBookings].sort((a, b) => {
@@ -181,6 +184,7 @@ export function HomePage() {
         dateKey,
         bookings: sortedBookings,
         isWeekend,
+        isSunday,
       };
     });
   }, [filteredBookings, ships]);
@@ -225,7 +229,7 @@ export function HomePage() {
         <div className="date-groups">
           {groupedBookings.map((group) => (
             <div key={group.dateKey} className="date-group">
-              <h2 className={`date-header ${group.isWeekend ? 'weekend' : ''}`}>
+              <h2 className={`date-header ${group.isSunday ? 'sunday' : group.isWeekend ? 'weekend' : ''}`}>
                 {group.date}
                 <span className="booking-count">{group.bookings.length}件</span>
               </h2>
