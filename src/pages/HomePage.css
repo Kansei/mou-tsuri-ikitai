@@ -12,7 +12,7 @@
 
 .results-count {
   font-weight: 700;
-  color: #1976d2;
+  color: #0288d1;
   font-size: 18px;
 }
 
@@ -43,8 +43,8 @@
 }
 
 .date-header.weekend {
-  color: #1976d2;
-  border-bottom-color: #1976d2;
+  color: #0288d1;
+  border-bottom-color: #0288d1;
 }
 
 .date-header.sunday {
@@ -80,7 +80,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid #e0e0e0;
-  border-top-color: #1976d2;
+  border-top-color: #0288d1;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
